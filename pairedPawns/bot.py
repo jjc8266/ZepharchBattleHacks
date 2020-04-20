@@ -44,6 +44,7 @@ def turn():
             forward = -1
             inLowerHalf = lambda x:x>=board_size//2
             index = board_size - 1
+
         madeMove = False
         if inLowerHalf(row):
             # try catpuring pieces
@@ -60,7 +61,13 @@ def turn():
                 # dlog('Captured at: (' + str(row + forward) + ', ' + str(col - 1) + ')')
 
             # otherwise check if piece will be captured if it moves forward, and checks it is in the lower half of the board
-            if not madeMove and not (check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team or check_space_wrapper(row + (2*forward), col + 1, board_size) == opp_team):
+            if not madeMove and (not (check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team or check_space_wrapper(row + (2*forward), col + 1, board_size) == opp_team)\
+                or (check_space_wrapper(row - (forward), col - 1, board_size) == team)\
+                    and (not check_space_wrapper(row, col - 1, board_size))\
+                or check_space_wrapper(row, col - 1, board_size) == team\
+                or check_space_wrapper(row, col + 1, board_size) == team\
+                or ((check_space_wrapper(row - (forward), col + 1, board_size) == team)\
+                    and (not check_space_wrapper(row, col + 1, board_size)))):
                 madeMove = True
                 move_forward()
                 # dlog('Moved forward!')
