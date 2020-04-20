@@ -64,12 +64,18 @@ def turn():
         # for row in currState:
         #     dlog(str(row))
 
+        #transpose matrix
+        transposedBoard = [[currState[j][i] for j in range(len(currState))] for i in range(len(currState[0]))] 
+
         for _ in range(board_size):
-            i = random.randint(0, board_size - 1)
-            if not check_space(index, i):
-                spawn(index, i)
-                dlog('Spawned unit at: (' + str(index) + ', ' + str(i) + ')')
-                break
+            count = 0
+            while True:
+                i = random.randint(0, board_size - 1)
+                if not check_space(index, i) and (team not in transposedBoard[i] or count>=board_size):
+                    spawn(index, i)
+                    dlog('Spawned unit at: (' + str(index) + ', ' + str(i) + ')')
+                    break
+                count+=1
 
     bytecode = get_bytecode()
     dlog('Done! Bytecode left: ' + str(bytecode))
