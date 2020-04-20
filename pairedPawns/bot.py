@@ -44,19 +44,24 @@ def turn():
             forward = -1
             inLowerHalf = lambda x:x>=board_size//2
             index = board_size - 1
-
+        madeMove = False
         if inLowerHalf(row):
             # try catpuring pieces
             if check_space_wrapper(row + forward, col + 1, board_size) == opp_team: # up and right
-                capture(row + forward, col + 1)
+                if row != index+1 and row != index:
+                    madeMove = True
+                    capture(row + forward, col + 1)
                 # dlog('Captured at: (' + str(row + forward) + ', ' + str(col + 1) + ')')
 
-            elif check_space_wrapper(row + forward, col - 1, board_size) == opp_team: # up and left
-                capture(row + forward, col - 1)
+            if not madeMove and check_space_wrapper(row + forward, col - 1, board_size) == opp_team: # up and left
+                if row != index+1 and row != index:
+                    madeMove = True
+                    capture(row + forward, col - 1)
                 # dlog('Captured at: (' + str(row + forward) + ', ' + str(col - 1) + ')')
 
             # otherwise check if piece will be captured if it moves forward, and checks it is in the lower half of the board
-            elif not (check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team or check_space_wrapper(row + (2*forward), col + 1, board_size) == opp_team):
+            if not madeMove and not (check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team or check_space_wrapper(row + (2*forward), col + 1, board_size) == opp_team):
+                madeMove = True
                 move_forward()
                 # dlog('Moved forward!')
         else:
@@ -107,13 +112,17 @@ def turn():
         colDict = {} #col numFriendlies to column idx
 
         enemyDistList = []
-
+        noGoZone = [] #list of indices where a pawn placed will be immediatly captured
         #sensor pre-computing
         for idx,column in enumerate(transposedBoard):
             numFriendlies = column.count(team)
             colDict[numFriendlies] = idx
             countList.append(numFriendlies)
-        
+            
+            #determine if pawn can be captured next round
+            if check_space_wrapper(index + forward, idx - 1, board_size) == opp_team\
+                or check_space_wrapper(index + forward, idx + 1, board_size) == opp_team:
+                noGoZone.append(idx)
 
             if opp_team in column:
                 if team == team.BLACK:
@@ -130,14 +139,14 @@ def turn():
             spawned = False
             for numFriendlies in countList:
                 i = colDict[numFriendlies]
-                if not check_space(index, i):
+                if not check_space(index, i) and i not in noGoZone:
                     spawn(index, i)
                     dlog('Spawned offensive unit at: (' + str(index) + ', ' + str(i) + ')')
                     spawned = True
                     break
             if not spawned:
                 for i in range(board_size):
-                    if not check_space(index, i):
+                    if not check_space(index, i) and i not in noGoZone:
                         spawn(index, i)
                         dlog('Spawned unit at: (' + str(index) + ', ' + str(i) + ')')
                         break
@@ -147,7 +156,7 @@ def turn():
             enemyDistList.sort()
             spawned = False
             for _,i in enemyDistList:
-                if not check_space(index, i):
+                if not check_space(index, i) and i not in noGoZone:
                     spawn(index, i)
                     dlog('Spawned defensive unit at: (' + str(index) + ', ' + str(i) + ')')
                     spawned = True
