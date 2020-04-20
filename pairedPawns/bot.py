@@ -37,37 +37,31 @@ def turn():
 
         if team == Team.WHITE:
             forward = 1
-            inLowerHalf = lambda x:x<board_size//2
+            inLowerHalf = lambda x:x<(board_size//2)+2
             index = 0
 
         else:
             forward = -1
-            inLowerHalf = lambda x:x>=board_size//2
+            inLowerHalf = lambda x:x>=(board_size//2)-2
             index = board_size - 1
 
         madeMove = False
         if inLowerHalf(row):
             # try catpuring pieces
             if check_space_wrapper(row + forward, col + 1, board_size) == opp_team: # up and right
-                if row != index+1 and row != index:
+                if row != index:
                     madeMove = True
                     capture(row + forward, col + 1)
                 # dlog('Captured at: (' + str(row + forward) + ', ' + str(col + 1) + ')')
 
             if not madeMove and check_space_wrapper(row + forward, col - 1, board_size) == opp_team: # up and left
-                if row != index+1 and row != index:
+                if row != index:
                     madeMove = True
                     capture(row + forward, col - 1)
                 # dlog('Captured at: (' + str(row + forward) + ', ' + str(col - 1) + ')')
 
             # otherwise check if piece will be captured if it moves forward, and checks it is in the lower half of the board
-            if not madeMove and (not (check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team or check_space_wrapper(row + (2*forward), col + 1, board_size) == opp_team)\
-                or (check_space_wrapper(row - (forward), col - 1, board_size) == team)\
-                    and (not check_space_wrapper(row, col - 1, board_size))\
-                or check_space_wrapper(row, col - 1, board_size) == team\
-                or check_space_wrapper(row, col + 1, board_size) == team\
-                or ((check_space_wrapper(row - (forward), col + 1, board_size) == team)\
-                    and (not check_space_wrapper(row, col + 1, board_size)))):
+            if not madeMove and (not (check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team or check_space_wrapper(row + (2*forward), col + 1, board_size) == opp_team)):
                 madeMove = True
                 move_forward()
                 # dlog('Moved forward!')
@@ -81,13 +75,21 @@ def turn():
                 else:
                     move_forward()
 
-
             # otherwise check if the pawn has backup on either side of it, or behind it
             elif check_space_wrapper(row,col-1,board_size) == check_space_wrapper(row,col+1,board_size) == team\
                     or check_space_wrapper(row-forward,col,board_size) == check_space_wrapper(row-(2*forward),col,board_size) == team\
                     or check_space_wrapper(row+forward,col,board_size) == team\
                     or check_space_wrapper(row+(2*forward),col,board_size):
                 move_forward()
+            
+            #check if pawntrade is available
+            elif    (check_space_wrapper(row - (forward), col - 1, board_size) == team)\
+                    and (not check_space_wrapper(row, col - 1, board_size))\
+                    or check_space_wrapper(row, col - 1, board_size) == team\
+                    or check_space_wrapper(row, col + 1, board_size) == team\
+                    or ((check_space_wrapper(row - (forward), col + 1, board_size) == team)\
+                    and (not check_space_wrapper(row, col + 1, board_size))):
+                    move_forward()
             
             elif check_space_wrapper(row-forward,col,board_size) == team:
                 if check_space_wrapper(row + forward, col + 1, board_size) == opp_team: # up and right
@@ -136,8 +138,7 @@ def turn():
                     column.reverse()
                 dist = column.index(opp_team)               
 
-                if dist<5:
-                    foundFriendly = False
+                if dist<7:
                     if team not in column[:dist]:
                         enemyDistList.append((dist,idx))
 
