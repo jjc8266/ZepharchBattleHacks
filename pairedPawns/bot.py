@@ -49,9 +49,8 @@ def turn():
             capture(row + forward, col - 1)
             dlog('Captured at: (' + str(row + forward) + ', ' + str(col - 1) + ')')
 
-        # otherwise try to move forward
-        elif row + forward != -1 and row + forward != board_size and not check_space_wrapper(row + forward, col, board_size):
-            #               ^  not off the board    ^            and    ^ directly forward is empty
+        # otherwise check if piece will be captured if it moveves forward
+        elif not (check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team or check_space_wrapper(row + (2*forward), col + 1, board_size) == opp_team):
             move_forward()
             dlog('Moved forward!')
 
@@ -62,7 +61,8 @@ def turn():
             index = board_size - 1
 
         currState = get_board()
-        dlog(str(currState))
+        # for row in currState:
+        #     dlog(str(row))
 
         for _ in range(board_size):
             i = random.randint(0, board_size - 1)
