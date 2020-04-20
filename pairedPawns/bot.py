@@ -37,8 +37,11 @@ def turn():
 
         if team == Team.WHITE:
             forward = 1
+            inLowerHalf = lambda x:x<board_size//2
+
         else:
             forward = -1
+            inLowerHalf = lambda x:x>=board_size//2
 
         # try catpuring pieces
         if check_space_wrapper(row + forward, col + 1, board_size) == opp_team: # up and right
@@ -49,10 +52,14 @@ def turn():
             capture(row + forward, col - 1)
             dlog('Captured at: (' + str(row + forward) + ', ' + str(col - 1) + ')')
 
-        # otherwise check if piece will be captured if it moveves forward
-        elif not (check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team or check_space_wrapper(row + (2*forward), col + 1, board_size) == opp_team):
+        # otherwise check if piece will be captured if it moves forward, and checks it is in the lower half of the board
+        elif inLowerHalf(row) and not (check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team or check_space_wrapper(row + (2*forward), col + 1, board_size) == opp_team):
             move_forward()
             dlog('Moved forward!')
+
+        #otherwise check if the pawn has backup on either side of it, or behind it
+        elif check_space_wrapper(row,col-1,board_size) == check_space_wrapper(row,col+1,board_size) == team:
+            move_forward()
 
     else: #This is the overlord
         if team == Team.WHITE:
