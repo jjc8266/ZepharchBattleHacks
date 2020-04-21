@@ -51,7 +51,7 @@ def turn():
             # log("im an offensive pawn ------------------------------------------------------------------------------------")
             log("started offensive pawn turn------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
         
-            if not check_space_wrapper(row + (forward), col, board_size):
+            if True:#not check_space_wrapper(row + (forward), col, board_size):
                 #detect pawns defending spot row+foward,col                
                 #enemy check:
                 # log(str((check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team)+(check_space_wrapper(row + (2*forward), col + 1, board_size) == opp_team))+"--------------------------------------------------------")
@@ -73,15 +73,15 @@ def turn():
                     if not check_space_wrapper(row+forward,col+1,board_size):
                         frienDefForward+= (check_space_wrapper(row-forward,col+1,board_size) == team)
                     else:
-                        frienDefForward+= ((check_space_wrapper(row-forward,col+1,board_size) == team)+(check_space_wrapper(row,col+1,board_size) == team))
+                        frienDefForward+= ((check_space_wrapper(row-forward,col+1,board_size) == team)+(check_space_wrapper(row,col+1,board_size) == team))-1
 
                     log("pawntrade result:"+str(frienDefForward-enemyDefForward))
-                    if frienDefForward-enemyDefForward>=-1:
+                    if frienDefForward-enemyDefForward>=0:
                         madeMove = True
                         move_forward()
             
             #check if you can make a capture to the right
-            elif not madeMove and check_space_wrapper(row + (forward), col+1, board_size) == opp_team:
+            if not madeMove and check_space_wrapper(row + (forward), col+1, board_size) == opp_team:
                 #detect pawns defending spot row+foward,col+1
                 #enemy check:
                 enemyDefForwardCapRight =   (check_space_wrapper(row + (2*forward), col , board_size) == opp_team)\
@@ -89,12 +89,12 @@ def turn():
                 #friendly check
                 frienDefForwardCapRight = 1+(check_space_wrapper(row, col + 2, board_size) == team)    
                 log("CaptureRightResult:"+str(frienDefForwardCapRight-enemyDefForwardCapRight))
-                if frienDefForwardCapRight-enemyDefForwardCapRight>=0:
+                if frienDefForwardCapRight-enemyDefForwardCapRight>0:
                     madeMove = True
                     capture(row+forward,col+1)
 
             #check if you can make a capture to the left
-            elif not madeMove and check_space_wrapper(row + (forward), col-1, board_size) == opp_team:
+            if not madeMove and check_space_wrapper(row + (forward), col-1, board_size) == opp_team:
                 #detect pawns defending spot row+foward,col-1
                 #enemy check:
                 enemyDefForwardCapLeft =   (check_space_wrapper(row + (2*forward), col , board_size) == opp_team)\

@@ -46,25 +46,31 @@ def turn():
             index = board_size - 1
 
         madeMove = False
+        # if col%2 == 1:
+        #     move_forward()
+        if False:
+            pass
+            
 
-        if check_space_wrapper(row + forward, col + 1, board_size) == opp_team: # up and right
-            if not (row == index and check_space_wrapper(row+forward,col,board_size) == opp_team):
-                madeMove = True
-                capture(row + forward, col + 1)
-            # dlog('Captured at: (' + str(row + forward) + ', ' + str(col + 1) + ')')
+        else:
+            if check_space_wrapper(row + forward, col + 1, board_size) == opp_team: # up and right
+                if not (row == index and check_space_wrapper(row+forward,col,board_size) == opp_team):
+                    madeMove = True
+                    capture(row + forward, col + 1)
+                # dlog('Captured at: (' + str(row + forward) + ', ' + str(col + 1) + ')')
 
-        if not madeMove and check_space_wrapper(row + forward, col - 1, board_size) == opp_team: # up and left
-            if not (row == index and check_space_wrapper(row+forward,col,board_size) == opp_team):
-                madeMove = True
-                capture(row + forward, col - 1)
-            # dlog('Captured at: (' + str(row + forward) + ', ' + str(col - 1) + ')')
+            if not madeMove and check_space_wrapper(row + forward, col - 1, board_size) == opp_team: # up and left
+                if not (row == index and check_space_wrapper(row+forward,col,board_size) == opp_team):
+                    madeMove = True
+                    capture(row + forward, col - 1)
+                # dlog('Captured at: (' + str(row + forward) + ', ' + str(col - 1) + ')')
 
-        if row == index:
-            move_forward()
-        elif row == index+forward and check_space_wrapper(row-forward,col,board_size):
-            move_forward()
-        elif check_space_wrapper(row-(2*forward),col,board_size) == check_space_wrapper(row-forward,col,board_size) == team:
-            move_forward()
+            if row == index or row == index+(board_size-1):
+                move_forward()
+            elif row == index+forward and check_space_wrapper(row-forward,col,board_size):
+                move_forward()
+            elif check_space_wrapper(row-(forward),col,board_size) == team:#check_space_wrapper(row-forward,col,board_size) == team:
+                move_forward()
 
 
         
@@ -113,6 +119,8 @@ def turn():
         def mimick():
             enemyDistList.sort()
             for _,_,i in enemyDistList:
+                # if i%2 == 1:
+                #     i = i-1
                 if not check_space(index, i) and i not in noGoZone:
                     spawn(index, i)
                     dlog('Spawned defensive unit at: (' + str(index) + ', ' + str(i) + ')')
@@ -131,14 +139,16 @@ def turn():
                     mimick()
                     spawned = True
                     break
-            laserList = sorted([(transposedBoard[colDex].count(team),colDex) for colDex in range(3)])
+            laserList = sorted([(transposedBoard[colDex].count(team),colDex) for colDex in range(2)])
             for _,colDex in laserList:
                 if not check_space(index, colDex) and colDex not in noGoZone:
+                    # if index%2 == 1:
+                    #     index-=1
                     spawn(index,colDex)
                     spawned = True
                     break
             if not spawned:
-                mimick
+                mimick()
             
     bytecode = get_bytecode()
     dlog('Done! Bytecode left: ' + str(bytecode))
