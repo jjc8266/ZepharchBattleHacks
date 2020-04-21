@@ -58,8 +58,8 @@ def turn():
                 enemyDefForward =   (check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team)\
                                     +(check_space_wrapper(row + (2*forward), col + 1, board_size) == opp_team)
                 #friendly check
-                frienDefForward = (check_space_wrapper(row + (2*forward), col - 1, board_size) == team)\
-                                    +(check_space_wrapper(row + (2*forward), col + 1, board_size) == team)
+                frienDefForward = (check_space_wrapper(row, col - 1, board_size) == team)\
+                                    +(check_space_wrapper(row, col + 1, board_size) == team)
                 log("pawntrade result:"+str(frienDefForward-enemyDefForward))
                 if frienDefForward-enemyDefForward>=0:
                     madeMove = True
