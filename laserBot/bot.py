@@ -47,7 +47,7 @@ def turn():
 
         madeMove = False
 
-        if col<3: #offensive pawns thar attempt to "laser" their way through a small section
+        if 1==1: #col<3: #offensive pawns thar attempt to "laser" their way through a small section
             # log("im an offensive pawn ------------------------------------------------------------------------------------")
             log("started offensive pawn turn------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
         
@@ -74,7 +74,7 @@ def turn():
                 #friendly check
                 frienDefForwardCapRight = 1+(check_space_wrapper(row, col + 2, board_size) == team)    
                 
-                if frienDefForwardCapRight-enemyDefForwardCapRight>0:
+                if frienDefForwardCapRight-enemyDefForwardCapRight>=0:
                     madeMove = True
                     capture(row+forward,col+1)
 
@@ -87,7 +87,7 @@ def turn():
                 #friendly check
                 frienDefForwardCapLeft = 1+(check_space_wrapper(row, col - 2, board_size) == team)
                 
-                if frienDefForwardCapLeft-enemyDefForwardCapLeft>0:
+                if frienDefForwardCapLeft-enemyDefForwardCapLeft>=0:
                     madeMove = True
                     capture(row+forward,col-1)
                 
