@@ -91,8 +91,8 @@ def turn():
                 log("CaptureRightResult:"+str(frienDefForwardCapRight-enemyDefForwardCapRight))
                 if frienDefForwardCapRight-enemyDefForwardCapRight>0:
                     if not (row == index and check_space_wrapper(row+forward,col,board_size) == opp_team):
-                    madeMove = True
-                    capture(row+forward,col+1)
+                        madeMove = True
+                        capture(row+forward,col+1)
 
             #check if you can make a capture to the left
             if not madeMove and check_space_wrapper(row + (forward), col-1, board_size) == opp_team:
@@ -105,8 +105,8 @@ def turn():
                 log("CaptureLeftResult:"+str(frienDefForwardCapLeft-enemyDefForwardCapLeft))
                 if frienDefForwardCapLeft-enemyDefForwardCapLeft>0:
                     if not (row == index and check_space_wrapper(row+forward,col,board_size) == opp_team):
-                    madeMove = True
-                    capture(row+forward,col-1)
+                        madeMove = True
+                        capture(row+forward,col-1)
                 
             log("done--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
         else: #these are defensive pawns whose goal is to give up no ground!
