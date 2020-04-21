@@ -73,7 +73,7 @@ def turn():
                                     +(check_space_wrapper(row + (2*forward), col + 2, board_size) == opp_team)
                 #friendly check
                 frienDefForwardCapRight = 1+(check_space_wrapper(row, col + 2, board_size) == team)    
-                
+                log("CaptureRightResult:"+str(frienDefForwardCapRight-enemyDefForwardCapRight))
                 if frienDefForwardCapRight-enemyDefForwardCapRight>=0:
                     madeMove = True
                     capture(row+forward,col+1)
@@ -86,7 +86,7 @@ def turn():
                                     +(check_space_wrapper(row + (2*forward), col - 2, board_size) == opp_team)
                 #friendly check
                 frienDefForwardCapLeft = 1+(check_space_wrapper(row, col - 2, board_size) == team)
-                
+                log("CaptureLeftResult:"+str(frienDefForwardCapLeft-enemyDefForwardCapLeft))
                 if frienDefForwardCapLeft-enemyDefForwardCapLeft>=0:
                     madeMove = True
                     capture(row+forward,col-1)
