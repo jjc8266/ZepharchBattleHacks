@@ -74,7 +74,7 @@ def turn():
                 #friendly check
                 frienDefForwardCapRight = 1+(check_space_wrapper(row, col + 2, board_size) == team)    
                 
-                if frienDefForwardCapRight-enemyDefForward>0:
+                if frienDefForwardCapRight-enemyDefForwardCapRight>0:
                     madeMove = True
                     capture(row+forward,col+1)
 
@@ -82,12 +82,12 @@ def turn():
             elif not madeMove and check_space_wrapper(row + (forward), col-1, board_size) == opp_team:
                 #detect pawns defending spot row+foward,col-1
                 #enemy check:
-                enemyDefForwardCapRight =   (check_space_wrapper(row + (2*forward), col , board_size) == opp_team)\
+                enemyDefForwardCapLeft =   (check_space_wrapper(row + (2*forward), col , board_size) == opp_team)\
                                     +(check_space_wrapper(row + (2*forward), col - 2, board_size) == opp_team)
                 #friendly check
-                frienDefForwardCapRight = 1+(check_space_wrapper(row, col - 2, board_size) == team)
+                frienDefForwardCapLeft = 1+(check_space_wrapper(row, col - 2, board_size) == team)
                 
-                if frienDefForwardCapRight-enemyDefForward>0:
+                if frienDefForwardCapLeft-enemyDefForwardCapLeft>0:
                     madeMove = True
                     capture(row+forward,col-1)
                 
