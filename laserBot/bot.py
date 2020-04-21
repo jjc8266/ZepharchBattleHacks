@@ -76,7 +76,7 @@ def turn():
                         frienDefForward+= ((check_space_wrapper(row-forward,col+1,board_size) == team)+(check_space_wrapper(row,col+1,board_size) == team))-1
 
                     log("pawntrade result:"+str(frienDefForward-enemyDefForward))
-                    if frienDefForward-enemyDefForward>=0 and check_space_wrapper(row-forward,col,board_size) == team:
+                    if frienDefForward-enemyDefForward>0 and check_space_wrapper(row-forward,col,board_size) == team:
                         madeMove = True
                         move_forward()
             
@@ -90,6 +90,7 @@ def turn():
                 frienDefForwardCapRight = 1+(check_space_wrapper(row, col + 2, board_size) == team)    
                 log("CaptureRightResult:"+str(frienDefForwardCapRight-enemyDefForwardCapRight))
                 if frienDefForwardCapRight-enemyDefForwardCapRight>0:
+                    if not (row == index and check_space_wrapper(row+forward,col,board_size) == opp_team):
                     madeMove = True
                     capture(row+forward,col+1)
 
@@ -103,6 +104,7 @@ def turn():
                 frienDefForwardCapLeft = 1+(check_space_wrapper(row, col - 2, board_size) == team)
                 log("CaptureLeftResult:"+str(frienDefForwardCapLeft-enemyDefForwardCapLeft))
                 if frienDefForwardCapLeft-enemyDefForwardCapLeft>0:
+                    if not (row == index and check_space_wrapper(row+forward,col,board_size) == opp_team):
                     madeMove = True
                     capture(row+forward,col-1)
                 
