@@ -2,7 +2,7 @@ import random
 
 from battlehack20.stubs import *
 
-DEBUG = 1
+DEBUG = 0
 def dlog(str):
     if DEBUG > 0:
         log(str)

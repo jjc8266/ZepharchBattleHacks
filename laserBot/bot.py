@@ -1,7 +1,7 @@
 import random
 from battlehack20.stubs import *
 
-DEBUG = 1
+DEBUG = 0
 def dlog(str):
     if DEBUG > 0:
         log(str)
@@ -48,16 +48,19 @@ def turn():
         madeMove = False
 
         if col<3: #offensive pawns thar attempt to "laser" their way through a small section
-            
+            # log("im an offensive pawn ------------------------------------------------------------------------------------")
+            log("started offensive pawn turn------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+        
             if not check_space_wrapper(row + (forward), col, board_size):
                 #detect pawns defending spot row+foward,col                
                 #enemy check:
-                enemyDefForward =   check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team\
-                                    +check_space_wrapper(row + (2*forward), col + 1, board_size) == opp_team
+                # log(str((check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team)+(check_space_wrapper(row + (2*forward), col + 1, board_size) == opp_team))+"--------------------------------------------------------")
+                enemyDefForward =   (check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team)\
+                                    +(check_space_wrapper(row + (2*forward), col + 1, board_size) == opp_team)
                 #friendly check
-                frienDefForward = check_space_wrapper(row + (2*forward), col - 1, board_size) == team\
-                                    +check_space_wrapper(row + (2*forward), col + 1, board_size) == team
-
+                frienDefForward = (check_space_wrapper(row + (2*forward), col - 1, board_size) == team)\
+                                    +(check_space_wrapper(row + (2*forward), col + 1, board_size) == team)
+                log("pawntrade result:"+str(frienDefForward-enemyDefForward))
                 if frienDefForward-enemyDefForward>=0:
                     madeMove = True
                     move_forward()
@@ -66,12 +69,12 @@ def turn():
             elif not madeMove and check_space_wrapper(row + (forward), col+1, board_size) == opp_team:
                 #detect pawns defending spot row+foward,col+1
                 #enemy check:
-                enemyDefForwardCapRight =   check_space_wrapper(row + (2*forward), col , board_size) == opp_team\
-                                    +check_space_wrapper(row + (2*forward), col + 2, board_size) == opp_team
+                enemyDefForwardCapRight =   (check_space_wrapper(row + (2*forward), col , board_size) == opp_team)\
+                                    +(check_space_wrapper(row + (2*forward), col + 2, board_size) == opp_team)
                 #friendly check
-                frienDefForwardCapRight = 1+check_space_wrapper(row, col + 2, board_size) == team    
+                frienDefForwardCapRight = 1+(check_space_wrapper(row, col + 2, board_size) == team)    
                 
-                if frienDefForwardCapRight-enemyDefForward>=0:
+                if frienDefForwardCapRight-enemyDefForward>0:
                     madeMove = True
                     capture(row+forward,col+1)
 
@@ -79,16 +82,16 @@ def turn():
             elif not madeMove and check_space_wrapper(row + (forward), col-1, board_size) == opp_team:
                 #detect pawns defending spot row+foward,col-1
                 #enemy check:
-                enemyDefForwardCapRight =   check_space_wrapper(row + (2*forward), col , board_size) == opp_team\
-                                    +check_space_wrapper(row + (2*forward), col - 2, board_size) == opp_team
+                enemyDefForwardCapRight =   (check_space_wrapper(row + (2*forward), col , board_size) == opp_team)\
+                                    +(check_space_wrapper(row + (2*forward), col - 2, board_size) == opp_team)
                 #friendly check
-                frienDefForwardCapRight = 1+check_space_wrapper(row, col - 2, board_size) == team    
+                frienDefForwardCapRight = 1+(check_space_wrapper(row, col - 2, board_size) == team)
                 
-                if frienDefForwardCapRight-enemyDefForward>=0:
+                if frienDefForwardCapRight-enemyDefForward>0:
                     madeMove = True
                     capture(row+forward,col-1)
                 
-
+            log("done--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
         else: #these are defensive pawns whose goal is to give up no ground!
             if check_space_wrapper(row + forward, col + 1, board_size) == opp_team: # up and right
                 if row != index:
@@ -103,10 +106,10 @@ def turn():
                 # dlog('Captured at: (' + str(row + forward) + ', ' + str(col - 1) + ')')
             
             if not madeMove and not (check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team or check_space_wrapper(row + (2*forward), col + 1, board_size) == opp_team):
-                if not check_space_wrapper(row+forward,col,board_size):
-                    if inLowerHalf(row):
-                        move_forward()
-            
+                # if not check_space_wrapper(row+forward,col,board_size):
+                if inLowerHalf(row):
+                    move_forward()
+        
 
     else: #This is the overlord
         if team == Team.WHITE:
@@ -129,12 +132,14 @@ def turn():
 
         enemyDistList = []
         noGoZone = [] #list of indices where a pawn placed will be immediatly captured
+        frienCount = 0
+
         #sensor pre-computing
         for idx,column in enumerate(transposedBoard):
             numFriendlies = column.count(team)
             colDict[numFriendlies] = idx
             countList.append(numFriendlies)
-            
+            frienCount+=numFriendlies
             #determine if pawn can be captured next round
             if check_space_wrapper(index + forward, idx - 1, board_size) == opp_team\
                 or check_space_wrapper(index + forward, idx + 1, board_size) == opp_team:
@@ -144,51 +149,38 @@ def turn():
                 if team == team.BLACK:
                     column.reverse()
                 dist = column.index(opp_team)               
+                blockerCount = column[:dist].count(team)
+                enemyDistList.append((blockerCount,dist,idx))
 
-                if dist<7   :
-                    if team not in column[:dist]:
-                        enemyDistList.append((dist,idx))
-
-        def offensivePlacement():
-            countList.sort() # determins which col has the least frendlies
-            spawned = False
-            for numFriendlies in countList:
-                i = colDict[numFriendlies]
-                if not check_space(index, i) and i not in noGoZone:
-                    spawn(index, i)
-                    dlog('Spawned offensive unit at: (' + str(index) + ', ' + str(i) + ')')
-                    spawned = True
-                    break
-            if not spawned:
-                for i in range(board_size):
-                    if not check_space(index, i) and i not in noGoZone:
-                        spawn(index, i)
-                        dlog('Spawned unit at: (' + str(index) + ', ' + str(i) + ')')
-                        break
-
-
-        if enemyDistList:
+        def mimick():
             enemyDistList.sort()
-            spawned = False
-            for _,i in enemyDistList:
+            for _,_,i in enemyDistList:
                 if not check_space(index, i) and i not in noGoZone:
                     spawn(index, i)
                     dlog('Spawned defensive unit at: (' + str(index) + ', ' + str(i) + ')')
                     spawned = True
-            if not spawned:
-                offensivePlacement() 
+                    break
         
-        else: #offensive placement
-            offensivePlacement()
-            # count = 0
-            # while count<16:
-            #     i = random.randint(0, board_size - 1)
-            #     if not check_space(index, i) and (team not in transposedBoard[i] or count>=board_size):
-            #         spawn(index, i)
-            #         dlog('Spawned unit at: (' + str(index) + ', ' + str(i) + ')')
-            #         break
-            #     count+=1
+        if frienCount<board_size: #mimick opponents placement
+            # log("numfriendlies:"+str(frienCount)+"adsffffffffffffffffffffffffffffffffffffffffffffffffff")
+            mimick()
 
+        else:
+            defenderCount = [a[0] for a in enemyDistList]
+            spawned = False
+            for x in defenderCount:
+                if x<2:
+                    mimick()
+                    spawned = True
+                    break
+            laserList = sorted([(transposedBoard[colDex].count(team),colDex) for colDex in range(3)])
+            for _,colDex in laserList:
+                if not check_space(index, colDex) and colDex not in noGoZone:
+                    spawn(index,colDex)
+                    spawned = True
+                    break
+            if not spawned:
+                mimick
+            
     bytecode = get_bytecode()
     dlog('Done! Bytecode left: ' + str(bytecode))
-
