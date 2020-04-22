@@ -193,7 +193,7 @@ def turn():
                 enemyDistList.append((blockerCount,dist,idx))
         spawned = False
         def mimick():
-            global spawned
+            spawned = False
             enemyDistList.sort()
             if enemyDistList:
                 for _,_,i in enemyDistList:
