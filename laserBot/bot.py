@@ -146,7 +146,7 @@ def turn():
                         madeMove = True
                         move_forward()
                     # move_forward()
-            if not madeMove and col<3 and check_space_wrapper(row-forward,col,board_size) == team and check_space_wrapper(row-(2*forward),col,board_size) == team:
+            if not madeMove and col<board_size and check_space_wrapper(row-forward,col,board_size) == team and check_space_wrapper(row-(2*forward),col,board_size) == team:
                 move_forward()
         log("Finished zepharch pawn move-----------------------------------------------------------------------")
 
@@ -172,6 +172,7 @@ def turn():
         enemyDistList = []
         noGoZone = [] #list of indices where a pawn placed will be immediatly captured
         frienCount = 0
+        spawned = False
 
         #sensor pre-computing
         for idx,column in enumerate(transposedBoard):
@@ -190,8 +191,9 @@ def turn():
                 dist = column.index(opp_team)               
                 blockerCount = column[:dist].count(team)
                 enemyDistList.append((blockerCount,dist,idx))
-
+        spawned = False
         def mimick():
+            global spawned
             enemyDistList.sort()
             if enemyDistList:
                 for _,_,i in enemyDistList:
@@ -200,7 +202,7 @@ def turn():
                         dlog('Spawned defensive unit at: (' + str(index) + ', ' + str(i) + ')')
                         spawned = True
                         break
-            else:
+            if not spawned:
                 for _ in range(board_size):
                     i = random.randint(0, board_size - 1)
                     if not check_space(index, i):
@@ -212,13 +214,14 @@ def turn():
         
         if frienCount<board_size: #mimick opponents placement
             # log("numfriendlies:"+str(frienCount)+"adsffffffffffffffffffffffffffffffffffffffffffffffffff")
+            spawned = False
             mimick()
 
         else:
             defenderCount = [a[0] for a in enemyDistList]
             spawned = False
             for x in defenderCount:
-                if x<1:
+                if x<3:
                     mimick()
                     spawned = True
                     break
@@ -229,7 +232,7 @@ def turn():
                     spawned = True
                     break
             if not spawned:
-                mimick
+                mimick()
             
     bytecode = get_bytecode()
     dlog('Done! Bytecode left: ' + str(bytecode))

@@ -47,19 +47,45 @@ def turn():
 
         madeMove = False
 
-        if col%2 == 0:
-            # move_forward()
-
+        if True:#col%2 == 0:
             if check_space_wrapper(row + forward, col + 1, board_size) == opp_team: # up and right
-                capture(row + forward, col + 1)
+                if not (row == index and check_space_wrapper(row+forward,col,board_size) == opp_team):
+                    madeMove = True
+                    capture(row + forward, col + 1)
                 # dlog('Captured at: (' + str(row + forward) + ', ' + str(col + 1) + ')')
 
-            elif check_space_wrapper(row + forward, col - 1, board_size) == opp_team: # up and left
-                capture(row + forward, col - 1)
-            # dlog('Captured at: (' + str(row + forward) + ', ' + str(col - 1) + ')')
-            else:
-                if not (check_space_wrapper(row+(2*forward),col+1,board_size) == opp_team or check_space_wrapper(row+(2*forward),col-1,board_size) == opp_team):
+            if not madeMove and check_space_wrapper(row + forward, col - 1, board_size) == opp_team: # up and left
+                if not (row == index and check_space_wrapper(row+forward,col,board_size) == opp_team):
+                    madeMove = True
+                    capture(row + forward, col - 1)
+                # dlog('Captured at: (' + str(row + forward) + ', ' + str(col - 1) + ')')
+            
+            if not madeMove and not (check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team or check_space_wrapper(row + (2*forward), col + 1, board_size) == opp_team):
+                # if not check_space_wrapper(row+forward,col,board_size):
+                if inLowerHalf(row):
+                    madeMove = True
                     move_forward()
+                elif col%2==1:
+                    log("move test in odd column---------------------------------------")
+                    if not (check_space_wrapper(row+forward,col+1,board_size) == team or check_space_wrapper(row+forward,col-1,board_size) == team):
+                        if check_space_wrapper(row+forward,col,board_size) == team or check_space_wrapper(row+(2*forward),col,board_size) == team:
+                            madeMove = True
+                            move_forward()
+                        elif check_space_wrapper(row-forward,col,board_size) == team:
+                            madeMove = True
+                            move_forward()
+                else:
+                    log("move test in even column---------------------------------------")
+                    if check_space_wrapper(row+forward,col,board_size) == team or check_space_wrapper(row+(2*forward),col,board_size) == team:
+                        madeMove = True
+                        move_forward()
+                    elif check_space_wrapper(row-forward,col,board_size) == team:
+                        madeMove = True
+                        move_forward()
+                    # move_forward()
+            if not madeMove and col<3 and check_space_wrapper(row-forward,col,board_size) == team and check_space_wrapper(row-(2*forward),col,board_size) == team:
+                move_forward()
+        log("Finished zepharch pawn move-----------------------------------------------------------------------")
 
 
         
