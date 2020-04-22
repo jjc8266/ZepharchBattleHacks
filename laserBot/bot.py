@@ -37,17 +37,17 @@ def turn():
 
         if team == Team.WHITE:
             forward = 1
-            inLowerHalf = lambda x:x<(board_size//2)+1
+            inLowerHalf = lambda x:x<(board_size//2)
             index = 0
 
         else:
             forward = -1
-            inLowerHalf = lambda x:x>=(board_size//2)-1
+            inLowerHalf = lambda x:x>=(board_size//2)
             index = board_size - 1
 
         madeMove = False
 
-        if 1==1: #col<3: #offensive pawns thar attempt to "laser" their way through a small section
+        if False:#col<3: #offensive pawns thar attempt to "laser" their way through a small section
             # log("im an offensive pawn ------------------------------------------------------------------------------------")
             log("started offensive pawn turn------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
         
@@ -73,7 +73,7 @@ def turn():
                     if not check_space_wrapper(row+forward,col+1,board_size):
                         frienDefForward+= (check_space_wrapper(row-forward,col+1,board_size) == team)
                     else:
-                        frienDefForward+= ((check_space_wrapper(row-forward,col+1,board_size) == team)+(check_space_wrapper(row,col+1,board_size) == team))-1
+                        frienDefForward+= ((check_space_wrapper(row-forward,col+1,board_size) == team)+(check_space_wrapper(row,col+1,board_size) == team))
 
                     log("pawntrade result:"+str(frienDefForward-enemyDefForward))
                     if frienDefForward-enemyDefForward>0 and check_space_wrapper(row-forward,col,board_size) == team:
@@ -89,7 +89,7 @@ def turn():
                 #friendly check
                 frienDefForwardCapRight = 1+(check_space_wrapper(row, col + 2, board_size) == team)    
                 log("CaptureRightResult:"+str(frienDefForwardCapRight-enemyDefForwardCapRight))
-                if frienDefForwardCapRight-enemyDefForwardCapRight>0:
+                if frienDefForwardCapRight-enemyDefForwardCapRight>=0:
                     if not (row == index and check_space_wrapper(row+forward,col,board_size) == opp_team):
                         madeMove = True
                         capture(row+forward,col+1)
@@ -103,7 +103,7 @@ def turn():
                 #friendly check
                 frienDefForwardCapLeft = 1+(check_space_wrapper(row, col - 2, board_size) == team)
                 log("CaptureLeftResult:"+str(frienDefForwardCapLeft-enemyDefForwardCapLeft))
-                if frienDefForwardCapLeft-enemyDefForwardCapLeft>0:
+                if frienDefForwardCapLeft-enemyDefForwardCapLeft>=0:
                     if not (row == index and check_space_wrapper(row+forward,col,board_size) == opp_team):
                         madeMove = True
                         capture(row+forward,col-1)
@@ -126,6 +126,18 @@ def turn():
                 # if not check_space_wrapper(row+forward,col,board_size):
                 if inLowerHalf(row):
                     move_forward()
+                if col%2==1:
+                    if not (check_space_wrapper(row+forward,col+1,board_size) == team or check_space_wrapper(row+forward,col-1,board_size) == team):
+                        if check_space_wrapper(row+foward,col,board_size) == team or check_space_wrapper(row+(2*foward),col,board_size) == team:
+                            move_forward()
+                        elif check_space_wrapper(row-foward,col,board_size) == team:
+                            move_forward()
+                else:
+                    if check_space_wrapper(row+foward,col,board_size) == team or check_space_wrapper(row+(2*foward),col,board_size) == team:
+                        move_forward()
+                    elif check_space_wrapper(row-foward,col,board_size) == team:
+                        move_forward()
+                    # move_forward()
         
 
     else: #This is the overlord
