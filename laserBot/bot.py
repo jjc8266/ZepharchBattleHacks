@@ -217,7 +217,7 @@ def turn():
             defenderCount = [a[0] for a in enemyDistList]
             spawned = False
             for x in defenderCount:
-                if x<2:
+                if x<1:
                     mimick()
                     spawned = True
                     break
