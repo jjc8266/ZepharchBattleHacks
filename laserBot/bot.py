@@ -52,7 +52,7 @@ def turn():
             log("started offensive pawn turn------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
         
             if True:#not check_space_wrapper(row + (forward), col, board_size):
-                #detect pawns defending spot row+foward,col                
+                #detect pawns defending spot row+forward,col                
                 #enemy check:
                 # log(str((check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team)+(check_space_wrapper(row + (2*forward), col + 1, board_size) == opp_team))+"--------------------------------------------------------")
                 enemyDefForward =   (check_space_wrapper(row + (2*forward), col - 1, board_size) == opp_team)\
@@ -82,7 +82,7 @@ def turn():
             
             #check if you can make a capture to the right
             if not madeMove and check_space_wrapper(row + (forward), col+1, board_size) == opp_team:
-                #detect pawns defending spot row+foward,col+1
+                #detect pawns defending spot row+forward,col+1
                 #enemy check:
                 enemyDefForwardCapRight =   (check_space_wrapper(row + (2*forward), col , board_size) == opp_team)\
                                     +(check_space_wrapper(row + (2*forward), col + 2, board_size) == opp_team)
@@ -96,7 +96,7 @@ def turn():
 
             #check if you can make a capture to the left
             if not madeMove and check_space_wrapper(row + (forward), col-1, board_size) == opp_team:
-                #detect pawns defending spot row+foward,col-1
+                #detect pawns defending spot row+forward,col-1
                 #enemy check:
                 enemyDefForwardCapLeft =   (check_space_wrapper(row + (2*forward), col , board_size) == opp_team)\
                                     +(check_space_wrapper(row + (2*forward), col - 2, board_size) == opp_team)
@@ -128,18 +128,20 @@ def turn():
                     madeMove = True
                     move_forward()
                 elif col%2==1:
+                    log("move test in odd column---------------------------------------")
                     if not (check_space_wrapper(row+forward,col+1,board_size) == team or check_space_wrapper(row+forward,col-1,board_size) == team):
-                        if check_space_wrapper(row+foward,col,board_size) == team or check_space_wrapper(row+(2*foward),col,board_size) == team:
+                        if check_space_wrapper(row+forward,col,board_size) == team or check_space_wrapper(row+(2*forward),col,board_size) == team:
                             madeMove = True
                             move_forward()
-                        elif check_space_wrapper(row-foward,col,board_size) == team:
+                        elif check_space_wrapper(row-forward,col,board_size) == team:
                             madeMove = True
                             move_forward()
                 else:
-                    if check_space_wrapper(row+foward,col,board_size) == team or check_space_wrapper(row+(2*foward),col,board_size) == team:
+                    log("move test in even column---------------------------------------")
+                    if check_space_wrapper(row+forward,col,board_size) == team or check_space_wrapper(row+(2*forward),col,board_size) == team:
                         madeMove = True
                         move_forward()
-                    elif check_space_wrapper(row-foward,col,board_size) == team:
+                    elif check_space_wrapper(row-forward,col,board_size) == team:
                         madeMove = True
                         move_forward()
                     # move_forward()
