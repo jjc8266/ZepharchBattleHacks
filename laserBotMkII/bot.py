@@ -90,11 +90,13 @@ def turn():
             return
         
         #if we're at this point, we can't capture and there should be a threat preventing us from moving fwd
-        friendDefSide = (check_space_wrapper(row, col - 1, board_size) == opp_team)\
-                                    +(check_space_wrapper(row, col + 1, board_size) == opp_team)
-        if friendDefSide > enemyDefForward:
-            if random.random() < 0.25:
+        friendDefSide = (check_space_wrapper(row, col - 1, board_size) == team)\
+                                    +(check_space_wrapper(row, col + 1, board_size) == team)
+        if canMoveForward and friendDefSide > enemyDefForward:
+            if random.random() < 0.4:
+                log("I am defended!")
                 move_forward()
+                return
     else: #This is the overlord
         if team == Team.WHITE:
             opp_team = Team.BLACK
