@@ -190,12 +190,22 @@ def turn():
 
         def mimick():
             enemyDistList.sort()
-            for _,_,i in enemyDistList:
-                if not check_space(index, i) and i not in noGoZone:
-                    spawn(index, i)
-                    dlog('Spawned defensive unit at: (' + str(index) + ', ' + str(i) + ')')
-                    spawned = True
-                    break
+            if enemyDistList:
+                for _,_,i in enemyDistList:
+                    if not check_space(index, i) and i not in noGoZone:
+                        spawn(index, i)
+                        dlog('Spawned defensive unit at: (' + str(index) + ', ' + str(i) + ')')
+                        spawned = True
+                        break
+            else:
+                for _ in range(board_size):
+                    i = random.randint(0, board_size - 1)
+                    if not check_space(index, i):
+                        spawn(index, i)
+                        spawned = True
+                        # dlog('Spawned unit at: (' + str(index) + ', ' + str(i) + ')')
+                        break
+
         
         if frienCount<board_size: #mimick opponents placement
             # log("numfriendlies:"+str(frienCount)+"adsffffffffffffffffffffffffffffffffffffffffffffffffff")
