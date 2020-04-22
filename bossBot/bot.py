@@ -93,6 +93,7 @@ def turn():
         oppColCounts = [0 for _ in range(16)] #number of enemies in each column
         myColCounts = [0 for _ in range(16)]
         closestOpp = [16 for _ in range(16)] #distance to closest enemy in each col
+        log(str(currState))
         for x, row in enumerate(currState): #for each row
             for y, bot in enumerate(currState): #for each col
                 if bot == team:
@@ -103,6 +104,10 @@ def turn():
                     oppColCounts[y] = oppColCounts[y] + 1
         columns = [x for x in range(16)] #sort this based on closest enemies
         columns.sort(key = lambda x: closestOpp[x]) #sort
+        log("Heyo i'm an overlord, here's the situation:")
+        log(str(oppColCounts))
+        log(str(myColCounts))
+        log(str(columns))
         #take defensive action in column if oppPawns / 2 >= myPawns
         #sorted by danger level
         for col in columns:
