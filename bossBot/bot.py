@@ -46,19 +46,14 @@ def turn():
 
         ###No matter pawn type, see if it's in threat of being captured
         toCapture = []
-        if check_is_oob(r, c + 1) == False and check_space(r, c + 1) == opp_team:
-            toCapture.append((r, c + 1))
-        if check_is_oob(r, c - 1) == False and check_space(r, c - 1) == opp_team:
-            toCapture.append((r, c - 1))
+        if check_is_oob(r, c + 1) == False and check_space(r + forward, c + 1) == opp_team:
+            toCapture.append((r + forward, c + 1))
+        if check_is_oob(r, c - 1) == False and check_space(r + forward, c - 1) == opp_team:
+            toCapture.append((r + forward, c - 1))
         #choose the only capture position if there's only 1
         #else do coinflip if there are 2
-        #@TODO: change this to random.choice
-        captureIndex = 0
-        if len(toCapture) == 2 and random.random() < 0.5:
-            captureIndex = 1
         if len(toCapture) != 0:
-            capture(*toCapture[captureIndex])
-            return #turn done
+            capture(*random.choice(toCapture))
             
         ###These are the zerg rushers
         if col < 3: #Fearless, brave warriors. They risk their lives for the overlord.
