@@ -32,6 +32,7 @@ def turn():
     dlog('Type: ' + str(robottype))
 
     if robottype == RobotType.PAWN:
+        log("Starting zepharch pawn move-----------------------------------------------------------------------")
         row, col = get_location()
         # dlog('My location is: ' + str(row) + ' ' + str(col))
 
@@ -147,7 +148,7 @@ def turn():
                     # move_forward()
             if not madeMove and col<3 and check_space_wrapper(row-forward,col,board_size) == team and check_space_wrapper(row-(2*forward),col,board_size) == team:
                 move_forward()
-        
+        log("Finished zepharch pawn move-----------------------------------------------------------------------")
 
     else: #This is the overlord
         if team == Team.WHITE:
