@@ -46,14 +46,18 @@ def turn():
 
         ###No matter pawn type, see if it's in threat of being captured
         toCapture = []
-        if check_is_oob(r, c + 1) == False and check_space(r + forward, c + 1) == opp_team:
-            toCapture.append((r + forward, c + 1))
-        if check_is_oob(r, c - 1) == False and check_space(r + forward, c - 1) == opp_team:
-            toCapture.append((r + forward, c - 1))
+        log("Checking if I'm in danger!")
+        if check_is_oob(row, col + 1) == False and check_space(row + forward, col + 1) == opp_team:
+            toCapture.append((row + forward, col + 1))
+        if check_is_oob(row, col - 1) == False and check_space(row + forward, col - 1) == opp_team:
+            toCapture.append((row + forward, col - 1))
         #choose the only capture position if there's only 1
         #else do coinflip if there are 2
+        log("Checking done!")
         if len(toCapture) != 0:
-            capture(*random.choice(toCapture))
+            move_r, move_c = random.choice(toCapture)
+            capture(move_r, move_c)
+            return
             
         ###These are the zerg rushers
         if col < 3: #Fearless, brave warriors. They risk their lives for the overlord.
@@ -90,11 +94,11 @@ def turn():
         for x, row in enumerate(currState): #for each row
             for y, bot in enumerate(currState): #for each col
                 if bot == team:
-                    myColCounts[y] += 1
+                    myColCounts[y] = myColCounts[y] + 1
                 elif bot == opp_team:
                     oppDist = abs(index - x)
                     closestOpp[y] = min(closestOpp[y], oppDist)
-                    oppColCounts[y] += 1
+                    oppColCounts[y] = oppColCounts[y] + 1
         columns = [x for x in range(16)] #sort this based on closest enemies
         columns.sort(key = lambda x: closestOpp[x]) #sort
         #take defensive action in column if oppPawns / 2 >= myPawns
