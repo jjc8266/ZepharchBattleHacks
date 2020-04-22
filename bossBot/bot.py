@@ -46,14 +46,14 @@ def turn():
 
         ###No matter pawn type, see if it's in threat of being captured
         toCapture = []
-        log("Checking if I'm in danger!")
-        if check_is_oob(row, col + 1) == False and check_space(row + forward, col + 1) == opp_team:
+        #log("Checking if I'm in danger!")
+        if check_is_oob(row + forward, col + 1) == False and check_space(row + forward, col + 1) == opp_team:
             toCapture.append((row + forward, col + 1))
-        if check_is_oob(row, col - 1) == False and check_space(row + forward, col - 1) == opp_team:
+        if check_is_oob(row + forward, col - 1) == False and check_space(row + forward, col - 1) == opp_team:
             toCapture.append((row + forward, col - 1))
         #choose the only capture position if there's only 1
         #else do coinflip if there are 2
-        log("Checking done!")
+        #log("Checking done!")
         if len(toCapture) != 0:
             move_r, move_c = random.choice(toCapture)
             capture(move_r, move_c)
@@ -82,8 +82,10 @@ def turn():
             if check_is_oob(row + forward, col) == False and check_space(row + forward, col) == False: #possible to move
                 if numAttackers == 0:
                     move_forward()
+                    return
                 if numHelpers > numAttackers:
                     move_forward()
+                    return
 
     else: #This is the overlord
         currState = get_board()
